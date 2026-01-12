@@ -1,4 +1,6 @@
 
+using ReminderApp.Services;
+
 namespace ReminderApp
 {
     public class Program
@@ -13,6 +15,7 @@ namespace ReminderApp
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSingleton<IReminderService, ReminderService>();
 
             var app = builder.Build();
 
