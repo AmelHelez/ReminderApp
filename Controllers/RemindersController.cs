@@ -16,11 +16,11 @@ namespace ReminderApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CreateReminderResponse> Create([FromBody] CreateReminderRequest request)
+        public async Task<ActionResult<CreateReminderResponse>> Create([FromBody] CreateReminderRequest request)
         {
             try
             {
-                var reminder = _reminderService.Create(request);
+                var reminder = await _reminderService.CreateAsync(request);
 
                 return Created("/reminders", reminder);
             }
@@ -31,9 +31,11 @@ namespace ReminderApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<ActionResult<IEnumerable<ReminderDto>>> GetAll()
         {
-            return Ok(_reminderService.GetAll());
+           var reminders = await _reminderService.GetAllAsync();
+
+            return Ok(reminders);
         }
     }
 }
