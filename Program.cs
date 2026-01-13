@@ -1,4 +1,5 @@
-
+using Microsoft.EntityFrameworkCore;
+using ReminderApp.Data;
 using ReminderApp.Services;
 
 namespace ReminderApp
@@ -9,17 +10,24 @@ namespace ReminderApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddSingleton<IReminderService, ReminderService>();
+
+            builder.Services.AddDbContext<ReminderDbContext>(options =>
+                options.UseSqlite(builder.Configuration.GetConnectionString("RemindersDb")));
+
+            builder.Services.AddScoped<IReminderService, ReminderService>();
+            builder.Services.AddHostedService<ReminderDeliveryService>();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<ReminderDbContext>();
+                context.Database.EnsureCreated();
+            }
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -27,12 +35,8 @@ namespace ReminderApp
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }

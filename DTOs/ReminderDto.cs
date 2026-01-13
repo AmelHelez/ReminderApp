@@ -14,7 +14,7 @@ namespace ReminderApp.Dtos
         {
             Id = r.Id;
             Message = r.Message;
-            SendAt = r.SendAt.UtcDateTime.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            SendAt = r.SendAt.ToString("yyyy-MM-ddTHH:mm:ssZ");
             Status = r.Status.ToString();
             Email = r.Email;
         }

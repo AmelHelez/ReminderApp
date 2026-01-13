@@ -9,7 +9,7 @@ namespace ReminderApp.Dtos
         public string Message { get; set; } = string.Empty;
 
         [Required]
-        public DateTimeOffset SendAt { get; set; }
+        public DateTime SendAt { get; set; } = DateTime.UtcNow;
 
         [EmailAddress]
         public string? Email { get; set; }
